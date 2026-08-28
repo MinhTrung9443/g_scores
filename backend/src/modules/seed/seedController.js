@@ -1,19 +1,29 @@
 const { seed } = require('../../seeders/csvSeeder');
 
-const runSeed = async (req, res, next) => {
-  try {
-    const result = await seed();
-    res.status(200).json({
-      message: 'Database seeded successfully',
-      result
-    });
-  } catch (error) {
-    console.error('Error during seeding:', error);
-    res.status(500).json({
-      message: 'Failed to seed database',
-      error: error.message
+let isSeeding = false;
+
+const runSeed = (req, res, next) => {
+  if (isSeeding) {
+    return res.status(429).json({
+      message: 'The seed process is currently running. Please do not send requests multiple times.'
     });
   }
+
+  isSeeding = true;
+
+  seed()
+    .then(result => {
+      console.log('Seed process completed successfully:', result);
+      isSeeding = false;
+    })
+    .catch(error => {
+      console.error('Seed process failed:', error);
+      isSeeding = false;
+    });
+
+  res.status(202).json({
+    message: 'The seed process has been started'
+  });
 };
 
 module.exports = {

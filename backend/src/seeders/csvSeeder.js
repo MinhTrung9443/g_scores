@@ -5,7 +5,7 @@ const { sequelize, Student, Subject, Score, ReportGroupA } = require('../models'
 
 const { SubjectRegistry } = require('../domain/subject.domain');
 
-const BATCH_SIZE = 10000;
+const BATCH_SIZE = 1000;
 
 const parseScore = (val) => {
   if (!val || val.trim() === '') return null;

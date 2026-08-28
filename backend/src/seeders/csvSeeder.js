@@ -48,7 +48,6 @@ const seed = () => {
           ignoreDuplicates: true
         });
 
-        // Tối ưu RAM bằng cách dùng raw: true (trả về JSON thuần thay vì Object Model cồng kềnh)
         const insertedStudents = await Student.findAll({
           where: { registration_number: students.map(s => s.registration_number) },
           attributes: ['id', 'registration_number'],
@@ -176,4 +175,16 @@ const seed = () => {
 };
 
 module.exports = { seed };
+
+if (require.main === module) {
+  seed()
+    .then(result => {
+      console.log('Finished:', result);
+      process.exit(0);
+    })
+    .catch(err => {
+      console.error('Error:', err);
+      process.exit(1);
+    });
+}
 

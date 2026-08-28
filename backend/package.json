@@ -4,7 +4,7 @@
   "description": "Backend for G-Scores",
   "main": "server.js",
   "scripts": {
-    "start": "node --max-old-space-size=256 server.js",
+    "start": "node server.js",
     "dev": "nodemon server.js",
     "seed": "node src/seeders/csvSeeder.js",
     "test": "jest"

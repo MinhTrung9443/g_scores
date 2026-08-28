@@ -10,6 +10,12 @@ const sequelize = new Sequelize(
     port: process.env.DB_PORT,
     dialect: 'mysql',
     logging: false,
+    dialectOptions: process.env.DB_HOST && process.env.DB_HOST.includes('tidbcloud.com') ? {
+      ssl: {
+        minVersion: 'TLSv1.2',
+        rejectUnauthorized: true
+      }
+    } : {}
   }
 );
 

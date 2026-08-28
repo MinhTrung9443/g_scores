@@ -5,7 +5,7 @@ const { sequelize, Student, Subject, Score, ReportGroupA } = require('../models'
 
 const { SubjectRegistry } = require('../domain/subject.domain');
 
-const BATCH_SIZE = 100;
+const BATCH_SIZE = 5000;
 
 const parseScore = (val) => {
   if (!val || val.trim() === '') return null;
@@ -44,9 +44,15 @@ const seed = () => {
     
     const insertBatches = async (students, scores, groupAReports) => {
       try {
-        const insertedStudents = await Student.bulkCreate(students, {
-          ignoreDuplicates: true,
-          returning: true
+        await Student.bulkCreate(students, {
+          ignoreDuplicates: true
+        });
+
+        // Tối ưu RAM bằng cách dùng raw: true (trả về JSON thuần thay vì Object Model cồng kềnh)
+        const insertedStudents = await Student.findAll({
+          where: { registration_number: students.map(s => s.registration_number) },
+          attributes: ['id', 'registration_number'],
+          raw: true
         });
         
         const regToId = {};
